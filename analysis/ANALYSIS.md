@@ -217,6 +217,48 @@ for (Signature s : signers) list.add(a(s, "SHA256"));   // hex SHA-256 of cert
 So a calling app is identified by the **SHA-256 of its signing cert** and
 checked against an expected (OEM) value before the API acts.
 
+#### Full operation map (the "8 AIDL ops")
+
+AIDL interface descriptor: **`com.scorpio.securitycom.ISecurityComApiService`**
+(obfuscated class; descriptor string retained). The service exposes eight
+operation handlers, each shaped `(String packageName, int requestCode,
+String arg2, String arg3)`, that forward to a central command dispatcher
+`om.a(om.a.SDK_*, packageName, requestCode, arg2, arg3)`. The `om.a` enum
+constant names are **retained**, so the operations are unambiguous:
+
+| Handler | Operation (`om.a.*`) | Purpose (inferred) | Result callback (retained AIDL descriptor) |
+|---------|----------------------|--------------------|---------------------------------------------|
+| `a` | `SDK_INIT` | Initialize/handshake the SDK session | `com.scorpio.securitycom.IInitListener` |
+| `b` | `SDK_REGISTER` | Register the calling app/device | `…IRegisterListener` |
+| `c` | `SDK_REQUEST_PERMISSION` | Request a permission/consent grant | `…IPermissionRequestListener` |
+| `d` | `SDK_REQUEST_PRIVACY_POLICY` | Request/confirm privacy policy | `…IPrivacyPolicyRequestListener` |
+| `e` | `SDK_GET_STATUS` | Query device/SDK status | `…IStatusListener` |
+| `f` | `SDK_DOWNLOAD_COMP` | Signal/handle a download completion | — |
+| `g` | `SDK_VERSION` | Query version info | — |
+| `h` | `SDK_GET_LOCK_REASON` | Query a "lock reason" | — |
+
+Example (two handlers, verbatim):
+
+```java
+private void a(String pkg, int code, String a2, String a3) { om.a(om.a.SDK_INIT,     pkg, code, a2, a3); }
+private void b(String pkg, int code, String a2, String a3) { om.a(om.a.SDK_REGISTER, pkg, code, a2, a3); }
+```
+
+Two further callback descriptors are present —
+`…IActivateListener` and `…ISyncDataListener` — indicating activate /
+data-sync flows reachable through the same async-callback pattern (the
+corresponding `om.a` constants were not among these eight handlers; they
+are likely driven internally or via `SDK_REGISTER`/`SDK_INIT`). Calls are
+**asynchronous**: the caller passes a `requestCode` and the result is
+delivered to the matching `I*Listener` binder callback. The client-side
+entry point is the (obfuscated) SDK class
+`com.scorpio.securitycom.SecurityComAccessManager`.
+
+**Shape of a call:** `packageName` identifies the caller (fed into the
+cert-digest check above); `requestCode` correlates the async reply; the
+two string args carry operation-specific payloads. The dispatcher `om`
+is the single chokepoint where authorization + routing happen.
+
 ### Backend endpoint — not statically recoverable
 
 There is **no hard-coded base URL/host in `classes.dex`**. The endpoint is
@@ -227,7 +269,9 @@ host; it would require the athena SDK or dynamic (on-device) capture.
 
 ## Open items / next steps
 
+- Exported IPC contract: **mapped** (8 operations, above).
 - Backend host/endpoints require the **athena SDK** or **dynamic capture**
   (app never executed here) — out of scope for static APK-only analysis.
-- Full per-operation mapping of the 8 AIDL methods (decompile each `a/b/c…`
-  overload) if a complete IPC contract is needed.
+- Inner/anonymous classes (`…$1`, `nw$a`) and the `om` dispatcher internals
+  are not directly inspectable via REA (`$` rejected by the CLI); the
+  retained `om.a.SDK_*` enum + AIDL descriptors already fix the contract.
