@@ -1,0 +1,11 @@
+# Proprietary third-party APK — do NOT redistribute the binary.
+# Kept locally for analysis only.
+apk/*.apk
+
+# Local analysis scratch / extracted trees (regenerable from REA).
+analysis/_scratch/
+analysis/apktool-out/
+analysis/jadx-out/
+
+# OS noise
+.DS_Store

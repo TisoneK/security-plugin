@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="29" android:compileSdkVersionCodename="10" package="com.scorpio.securitycom" platformBuildVersionCode="32" platformBuildVersionName="1.0.0.24">
+    <permission android:description="@string/security_com_permission" android:label="@string/security_com_permission" android:name="com.securitycom.permission.ACCESS" android:protectionLevel="signature"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.android.settings.SETTINGS_CONTENT_PROVIDER"/>
+    <uses-permission android:name="com.securitycom.permission.ACCESS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <meta-data android:name="tran_athena_version" android:value="2.2.0.1"/>
+    <meta-data android:name="tran_coreutil_version" android:value="1.0.61.04"/>
+    <application android:allowBackup="false" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:icon="@mipmap/ic_launcher" android:label=" " android:name="com.scorpio.ScorpioApplication" android:resizeableActivity="false" android:supportsRtl="true" android:theme="@style/AppTheme" android:usesCleartextTraffic="true" android:usesNonSdkApi="true">
+        <activity android:exported="false" android:launchMode="singleTask" android:name="com.scorpio.DownLoadActivity" android:screenOrientation="portrait" android:theme="@style/TranslucentTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:launchMode="singleTask" android:name="com.scorpio.GuideActivity" android:screenOrientation="portrait" android:theme="@style/QThemeDark_white">
+            <intent-filter>
+                <action android:name="com.securitycom.action.HOME"/>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:exported="false" android:launchMode="singleInstance" android:name="com.scorpio.BootCheckActivity" android:theme="@style/OnePxActivityStyle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <receiver android:exported="true" android:name="com.scorpio.receive.MySecretCodeReceiver">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE"/>
+                <data android:host="7298" android:scheme="android_secret_code"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:enabled="true" android:exported="false" android:name="com.scorpio.control.AdminReceiver" android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+            </intent-filter>
+            <meta-data android:name="android.app.device_admin" android:resource="@xml/device_admin"/>
+        </receiver>
+        <receiver android:exported="false" android:name="com.scorpio.receive.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="transsion.action.START_BOOT"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:exported="false" android:name="com.scorpio.receive.InstallAppReceiver">
+            <intent-filter>
+                <action android:name="com.scorpio.receive.SESSION_API_PACKAGE_INSTALLED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:exported="true" android:name="com.scorpio.receive.MyPackageReplacedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+        <provider android:authorities="com.scorpio.fileprovider" android:exported="false" android:grantUriPermissions="true" android:name="androidx.core.content.FileProvider">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
+        </provider>
+        <service android:exported="false" android:name="com.scorpio.service.KeepAliveService" android:permission="com.scorpio.securitycom.permission.ACCESS">
+            <intent-filter>
+                <action android:name="com.scorpio.securitycom.SEPersistentService"/>
+            </intent-filter>
+        </service>
+        <service android:enabled="true" android:exported="true" android:name="com.scorpio.service.SecurityComApiService">
+            <intent-filter>
+                <action android:name="com.securitycom.action.SERVICE_API"/>
+            </intent-filter>
+        </service>
+        <service android:exported="true" android:name="com.scorpio.service.PullService"/>
+        <provider android:authorities="com.scorpio.securitycom.com.liulishuo.okdownload" android:exported="false" android:name="com.liulishuo.okdownload.OkDownloadProvider"/>
+    </application>
+</manifest>
+

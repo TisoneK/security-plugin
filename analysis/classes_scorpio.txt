@@ -1,0 +1,144 @@
+## evidence_id
+
+ev_9d98fa21c63c73ec7d373f192d2314b3b23730f62122fe597dc82b4dfd04fc5d
+
+## subject.name
+
+com.scorpio.securitycom_1.0.0.24-32_minAPI28(nodpi)_apkmirror.com.apk
+
+## subject.digest
+
+| Key    | Value                                                            |
+|--------|------------------------------------------------------------------|
+| sha256 | 35ec8526d518ef0a0f8d1514b99827925fde12e1396fd0b14f0965badfa14fef |
+
+## subject.local_path
+
+/Users/bao/Code/security-plugin/apk/com.scorpio.securitycom_1.0.0.24-32_minAPI28(nodpi)_apkmirror.com.apk
+
+## subject.format
+
+apk
+
+## subject.architecture
+
+null
+
+## provider
+
+| Key     | Value         |
+|---------|---------------|
+| id      | jadx          |
+| name    | JADX headless |
+| version | 0.7.1         |
+
+## analysis_profile
+
+null
+
+## predicate_type
+
+rea.analysis
+
+## operation
+
+search_android_classes
+
+## parameters
+
+| Key   | Value                                                                     |
+|-------|---------------------------------------------------------------------------|
+| path  | apk/com.scorpio.securitycom_1.0.0.24-32_minAPI28(nodpi)_apkmirror.com.apk |
+| query | com.scorpio                                                               |
+
+## raw_result.server
+
+| Key     | Value           |
+|---------|-----------------|
+| name    | rea-jadx-bridge |
+| version | 4               |
+
+## raw_result.bridge_sha256
+
+a02b1ef0a4a40abd1ae310b9ee686ca163e0b59a3256df524c35b90ed17e9e63
+
+## raw_result.jar_sha256
+
+6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75
+
+## raw_result.loaded
+
+| Key            | Value                                                                          |
+|----------------|--------------------------------------------------------------------------------|
+| state          | LOADED                                                                         |
+| apk_path       | /var/folders/9y/hmthxmpj5wvfmvh5xdy0r7vc0000gn/T/rea-android-q4Gbbk/target.apk |
+| class_count    | 754                                                                            |
+| resource_count | 451                                                                            |
+| threads        | 1                                                                              |
+| resources      | full                                                                           |
+
+## raw_result.calls
+
+| operation      | input           | response        |
+|----------------|-----------------|-----------------|
+| rea_jvm_status | [object Object] | [object Object] |
+| load_apk       | [object Object] | [object Object] |
+| list_classes   | [object Object] | [object Object] |
+
+## normalized_result.engine
+
+| Key             | Value                                                            |
+|-----------------|------------------------------------------------------------------|
+| name            | jadx-headless-mcp                                                |
+| version         | 0.7.1                                                            |
+| artifact_sha256 | 6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75 |
+| source_revision | 5844800a486d2248fa949b74c9896285f5b54de2                         |
+| worker_count    | 1                                                                |
+| heap_limit_mib  | 2048                                                             |
+
+## normalized_result.query
+
+com.scorpio
+
+## normalized_result.total_classes
+
+754
+
+## normalized_result.matches
+
+com.scorpio.BootCheckActivity,com.scorpio.DownLoadActivity,com.scorpio.GuideActivity,com.scorpio.PyDownloadProgressBar,com.scorpio.ScorpioApplication,com.scorpio.bean.BaseBean,com.scorpio.bean.BaseBeanNew,com.scorpio.bean.QueryAesKeyBean,com.scorpio.bean.RequestApkUrl,com.scorpio.bean.SdkAuthorizeBean,com.scorpio.bean.TeeDeviceStatusInfo,com.scorpio.bean.TeeEncryptData,com.scorpio.bean.TrackBean,com.scorpio.bean.VersionControlBean,com.scorpio.control.AdminReceiver,com.scorpio.control.FocusChangeReceiver,com.scorpio.receive.BootReceiver,com.scorpio.receive.InstallAppReceiver,com.scorpio.receive.MyPackageReplacedReceiver,com.scorpio.receive.MySecretCodeReceiver,com.scorpio.securitycom.R,com.scorpio.service.KeepAliveService,com.scorpio.service.PullService,com.scorpio.service.SecurityComApiService
+
+## normalized_result.duplicate_names
+
+
+
+## normalized_result.coverage
+
+complete
+
+## confidence
+
+observed
+
+## authority
+
+shipped-artifact
+
+## environment
+
+null
+
+## limitations
+
+Static decompiler observations do not establish runtime behavior; the APK is never executed.,Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.,Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.,Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.,Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider.
+
+## relationship_coverage
+
+null
+
+## locations
+
+
+
+## evidence_links
+
