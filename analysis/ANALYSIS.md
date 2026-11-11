@@ -144,9 +144,90 @@ rea inspect-android-class   "$APK" com.scorpio.service.SecurityComApiService
 rea inspect-android-method  "$APK" <class> <method>   # per-method decompile
 ```
 
+## Deep dive — method-level (jadx via `rea inspect-android-method`)
+
+Code is ProGuard-obfuscated (helper classes `nz`, `np`, `op`, `of`, …),
+but the framework calls and retained strings pin down the mechanisms.
+All snippets below are decompiler output, lightly trimmed.
+
+### Startup & activation gate — `ScorpioApplication.onCreate()`
+
+```java
+a = this;
+if (op.a()) {
+    this.b = np.a().b();
+    boolean isDeviceActive = a().b().b();
+    of.b("SecurityCom", "Application onCreate isDeviceActive: " + isDeviceActive);
+    if (isDeviceActive) {
+        nz.a().f(); nz.a().i(); nz.a().d();   // start manager tasks
+        if (ng.a()) nh.a();
+        startActivity(new Intent(this, BootCheckActivity.class)
+                        .addFlags(FLAG_ACTIVITY_NEW_TASK));   // keep-alive
+        FocusChangeReceiver.a();
+    }
+}
+MarkPointUtil.a(this, "SecurityCom", 1096, 0, false);  // athena analytics
+```
+
+Behavior is gated on an **`isDeviceActive`** flag; analytics go through the
+Transsion **athena** `MarkPointUtil` (event id `1096`). Log tag: `SecurityCom`.
+
+### Install flow — Android `PackageInstaller` Session API
+
+Retained strings/types confirm session-based installation (not just an
+`ACTION_VIEW` intent):
+
+- `android.content.pm.PackageInstaller`, `PackageInstaller$Session`,
+  `PackageInstaller$SessionParams`, `getPackageInstaller`
+- MIME `application/vnd.android.package-archive`; payload staged as
+  **`SecurityCom.apk`** (served via `com.scorpio.fileprovider`)
+- completion broadcast **`com.scorpio.receive.SESSION_API_PACKAGE_INSTALLED`**
+  → handled by `InstallAppReceiver`
+
+With OEM/system privileges this path can perform **silent installs**.
+
+### Crypto — Android Keystore (TEE) + AES
+
+- `android.security.keystore.KeyGenParameterSpec`,
+  `android.security.KeyPairGeneratorSpec$Builder` → **hardware/TEE-backed
+  key generation** (this is the "Tee" in `TeeEncryptData` /
+  `TeeDeviceStatusInfo`).
+- `javax.crypto.spec.SecretKeySpec` → **AES** symmetric crypto, with the
+  session key negotiated per `QueryAesKeyBean`.
+- HTTP client is **okhttp3** over TLS; `usesCleartextTraffic` is also on.
+
+### Exported IPC API — `SecurityComApiService` (`com.securitycom.action.SERVICE_API`)
+
+`onBind()` returns an **AIDL Binder stub** (field `c`, type `nw$a`). The
+class exposes ~8 operation methods shaped `(String pkg, int, String, String)`.
+**Caller authentication is by signing-certificate digest allowlisting**, not
+merely the signature-level permission:
+
+```java
+// getSignatures(context, packageName): SHA-256 hex digests of the CALLER's certs
+PackageInfo pi = pm.getPackageInfo(pkg, GET_SIGNING_CERTIFICATES);
+Signature[] signers = pi.signingInfo.hasMultipleSigners()
+        ? pi.signingInfo.getApkContentsSigners()
+        : pi.signingInfo.getSigningCertificateHistory();
+for (Signature s : signers) list.add(a(s, "SHA256"));   // hex SHA-256 of cert
+
+// getSignatureString(sig, alg): hex( MessageDigest(alg).digest(sig.toByteArray()) )
+```
+
+So a calling app is identified by the **SHA-256 of its signing cert** and
+checked against an expected (OEM) value before the API acts.
+
+### Backend endpoint — not statically recoverable
+
+There is **no hard-coded base URL/host in `classes.dex`**. The endpoint is
+assembled at runtime and/or provided by the Transsion **athena /
+coreutil** SDKs (declared via `tran_*_version` meta-data but **not bundled**
+in this APK). Static analysis of this APK alone cannot reveal the server
+host; it would require the athena SDK or dynamic (on-device) capture.
+
 ## Open items / next steps
 
-- Decompile key methods (`inspect-android-method`) to recover backend
-  hostnames/endpoints, the AES/TEE scheme, and the exact install flow.
-- Map the exported `SERVICE_API` protocol (actions + extras).
-- Decide publication scope & visibility (see project notes).
+- Backend host/endpoints require the **athena SDK** or **dynamic capture**
+  (app never executed here) — out of scope for static APK-only analysis.
+- Full per-operation mapping of the 8 AIDL methods (decompile each `a/b/c…`
+  overload) if a complete IPC contract is needed.
