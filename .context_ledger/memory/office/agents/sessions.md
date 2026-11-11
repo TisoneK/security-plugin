@@ -27,8 +27,8 @@ re-seeded into the new office explicitly, and nothing else carries over.
 ## 2026-11-11 — Session 1
 - **Agent:** Claude Code | **Model:** claude-opus-4-8 | **Platform:** Intel Mac (Core i3, x86_64), macOS Darwin 24.6.0, Claude desktop app | **Role:** engineer | **Core:** 2.3.3
 - **Task:** Copy APK from Downloads; use REA to reverse-engineer `com.scorpio.securitycom`; bootstrap context-ledger; decide recreate/publish.
-- **Commits:** 0 (nothing committed yet — git repo initialized, no remote)
-- **Outcome:** partial — REA toolchain built from scratch (no usable Java on an Intel Mac; see system/environments.md), APK architecture fully mapped (analysis/ANALYSIS.md). Paused before recreate/publish pending owner decision on scope + repo visibility (proprietary Transsion OEM app → copyright/responsible-disclosure concerns).
-- **Open items:** tasks/parking-lot.md (publish-scope decision; per-method decompile of backend endpoints) and tasks/current.md.
+- **Commits:** 2 (e431f42..f6f0133) + this ledger clock-out
+- **Outcome:** done — REA toolchain built from scratch (no usable Java on an Intel Mac; see system/environments.md), APK architecture mapped (analysis/ANALYSIS.md), ledger initialized, published PUBLIC analysis-only repo at https://github.com/TisoneK/security-plugin (no APK binary, no functional clone).
+- **Open items:** tasks/parking-lot.md P-2026-11-11-2 (optional: per-method decompile to recover backend endpoints / AES+TEE scheme / exact install flow).
 - **Notes:** .context_ledger/memory/office/sessions/2026-11-11-1/notes.md
 - **Report:** none
