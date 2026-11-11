@@ -61,7 +61,7 @@ out of the queue, not into the void.
 
 | ID | Summary |
 |----|---------|
-| P-2026-11-11-2 | Optional deeper pass: `rea inspect-android-method` on `PullService` / `SecurityComApiService` / the download+install path to recover **backend hostnames/endpoints**, the **AES key + TEE** scheme, and the exact install flow + the exported `SERVICE_API` action/extras protocol. Would enrich analysis/ANALYSIS.md. Run `source ~/.local/rea-toolchain/env.sh` first. |
+| P-2026-11-11-2 | **Mostly RESOLVED 2026-11-11** (see ANALYSIS.md "Deep dive"). Confirmed: install = PackageInstaller **Session API** staging `SecurityCom.apk` → broadcast `SESSION_API_PACKAGE_INSTALLED`; crypto = Android **Keystore/TEE** keygen + AES SecretKeySpec (QueryAesKeyBean); exported API = AIDL Binder gated by **caller signing-cert SHA-256 digest** allowlisting; activation gate `isDeviceActive`; analytics via athena MarkPointUtil (1096). **Backend host NOT statically recoverable** — assembled at runtime / in the non-bundled athena SDK; needs dynamic capture. Remaining optional: map all 8 AIDL op methods one by one. |
 
 ## Someday
 
