@@ -61,7 +61,7 @@ out of the queue, not into the void.
 
 | ID | Summary |
 |----|---------|
-| P-2026-11-11-2 | **Mostly RESOLVED 2026-11-11** (see ANALYSIS.md "Deep dive"). Confirmed: install = PackageInstaller **Session API** staging `SecurityCom.apk` → broadcast `SESSION_API_PACKAGE_INSTALLED`; crypto = Android **Keystore/TEE** keygen + AES SecretKeySpec (QueryAesKeyBean); exported API = AIDL Binder gated by **caller signing-cert SHA-256 digest** allowlisting; activation gate `isDeviceActive`; analytics via athena MarkPointUtil (1096). **Backend host NOT statically recoverable** — assembled at runtime / in the non-bundled athena SDK; needs dynamic capture. Remaining optional: map all 8 AIDL op methods one by one. |
+| P-2026-11-11-2 | **Mostly RESOLVED 2026-11-11** (see ANALYSIS.md "Deep dive"). Confirmed: install = PackageInstaller **Session API** staging `SecurityCom.apk` → broadcast `SESSION_API_PACKAGE_INSTALLED`; crypto = Android **Keystore/TEE** keygen + AES SecretKeySpec (QueryAesKeyBean); exported API = AIDL Binder gated by **caller signing-cert SHA-256 digest** allowlisting; activation gate `isDeviceActive`; analytics via athena MarkPointUtil (1096). **Backend host NOT statically recoverable** — assembled at runtime / in the non-bundled athena SDK; needs dynamic capture. Remaining optional: map all 8 AIDL op methods one by one. → **DONE 2026-11-11**: 8 ops mapped via retained `om.a.SDK_*` enum (SDK_INIT, SDK_REGISTER, SDK_REQUEST_PERMISSION, SDK_REQUEST_PRIVACY_POLICY, SDK_GET_STATUS, SDK_DOWNLOAD_COMP, SDK_VERSION, SDK_GET_LOCK_REASON) + AIDL listener descriptors; see ANALYSIS.md "Full operation map". Item fully resolved. |
 
 ## Someday
 
